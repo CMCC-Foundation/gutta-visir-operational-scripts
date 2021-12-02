@@ -7,7 +7,8 @@
 ########################################## 
 
 # paths
-OP_PATH=/work/opa/visir-dev/operational_scripts/
+source $HOME/gutta.conf
+
 
 ##########################################
 #

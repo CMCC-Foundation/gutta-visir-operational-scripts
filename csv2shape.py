@@ -15,65 +15,63 @@ param = ""
 
 def write_shapefile(inputfile):
 
-  
-    outputfileShp = os.path.join(os.path.dirname(inputfile),os.path.splitext(os.path.basename(inputfile))[0] + '.shp')
+    try:
+        outputfileShp = os.path.join(os.path.dirname(inputfile),os.path.splitext(os.path.basename(inputfile))[0] + '.shp')
+        print("outputfileShp-->",outputfileShp)
+        shapeFile = driver.CreateDataSource(outputfileShp)
 
-    if not outputfileShp.endswith('.shp'):
-        return
-    print("outputfileShp-->",outputfileShp)
+        var_name = os.path.splitext(os.path.basename(inputfile))[0]
+        print("var_name-->",var_name)
 
-    shapeFile = driver.CreateDataSource(outputfileShp)
+        layerLname = os.path.splitext(os.path.basename(inputfile))[0] + '.crv'
+        print("layerLname-->",layerLname)
 
-    var_name = os.path.splitext(os.path.basename(inputfile))[0]
-    print("var_name-->",var_name)
-
-    layerLname = os.path.splitext(os.path.basename(inputfile))[0] + '.crv'
-    print("layerLname-->",layerLname)
-
-    layerL = shapeFile.CreateLayer(layerLname, spatialReference, osgeo.ogr.wkbLineString)
-    layerL_defn = layerL.GetLayerDefn()
-    # print("inputfile-->",inputfile)
+        layerL = shapeFile.CreateLayer(layerLname, spatialReference, osgeo.ogr.wkbLineString)
+        layerL_defn = layerL.GetLayerDefn()
+        # print("inputfile-->",inputfile)
 
 
-    with open(inputfile, 'r') as csvfile:
-        print("---------------------------")
-        reader = csv.DictReader(csvfile, delimiter=',', skipinitialspace=True)
-        #  for each column
-        for field in reader.fieldnames:
-            print("FIELD-->",field)
-            if field=='lon': datatype = ogr.OFTReal
-            elif field=='lat': datatype = ogr.OFTReal
-            elif field=='dist': datatype = ogr.OFTInteger
-            elif field=='time': datatype = ogr.OFTInteger
-            elif field=='CO2t': datatype = ogr.OFTInteger
-            elif field=='plotIdx': datatype = ogr.OFTInteger
-            else: datatype = ogr.OFTString
+        with open(inputfile, 'r') as csvfile:
+            print("---------------------------")
+            reader = csv.DictReader(csvfile, delimiter=',', skipinitialspace=True)
+            #  for each column
+            for field in reader.fieldnames:
+		#  print("FIELD-->",field)
+                if field=='lon': datatype = ogr.OFTReal
+                elif field=='lat': datatype = ogr.OFTReal
+                elif field=='dist': datatype = ogr.OFTInteger
+                elif field=='time': datatype = ogr.OFTInteger
+                elif field=='CO2t': datatype = ogr.OFTInteger
+                elif field=='plotIdx': datatype = ogr.OFTInteger
+                else: datatype = ogr.OFTString
 
-            new_field = ogr.FieldDefn(field, datatype)
-            layerL.CreateField(new_field)
+                new_field = ogr.FieldDefn(field, datatype)
+                layerL.CreateField(new_field)
 
-        featureL = osgeo.ogr.Feature(layerL_defn)
-            
-        #  for each row (ADD POINTS to featureP layer)
-        idx = -1
-        for row in reader:
-            tmpidx = row['plotIdx']
-            if tmpidx != idx:
-                # print("NEW line -->",row)
-                isoline = ogr.Geometry(ogr.wkbLineString)
-            # else:
-                # print("   SAME line -->",row)
-            isoline.AddPoint_2D( float(row['lon']), float(row['lat']) )
-            idx = row['plotIdx']
-            featureL.SetGeometryDirectly(isoline)
-            featureL.SetField("lat", row['lat'])
-            featureL.SetField("lon", row['lon'])
-            featureL.SetField(var_name, row[var_name])
-            featureL.SetField("plotIdx", row['plotIdx'])
-            layerL.CreateFeature(featureL)
-        featureL = None
+            featureL = osgeo.ogr.Feature(layerL_defn)
+                
+            #  for each row (ADD POINTS to featureP layer)
+            idx = -1
+            for row in reader:
+                tmpidx = row['plotIdx']
+                if tmpidx != idx:
+                    # print("NEW line -->",row)
+                    isoline = ogr.Geometry(ogr.wkbLineString)
+                # else:
+                    # print("   SAME line -->",row)
+                isoline.AddPoint_2D( float(row['lon']), float(row['lat']) )
+                idx = row['plotIdx']
+                featureL.SetGeometryDirectly(isoline)
+                featureL.SetField("lat", row['lat'])
+                featureL.SetField("lon", row['lon'])
+                featureL.SetField(var_name, row[var_name])
+                featureL.SetField("plotIdx", row['plotIdx'])
+                layerL.CreateFeature(featureL)
+            featureL = None
 
-    shapeFile.Destroy()
+        shapeFile.Destroy()
+    except:
+        sys.exit(1)
 
 
 def main(argv):
