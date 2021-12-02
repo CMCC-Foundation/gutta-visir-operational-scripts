@@ -2,6 +2,25 @@
 
 ##########################################
 #
+# Help message
+#
+########################################## 
+
+if [[ $1 == "--help" ]]; then
+    echo "The standard way of invoking GUTTA is:"
+    echo "   $ sh runVisir.sh <YYYYMMDD_HH>"
+    echo
+    echo "...but it is possible to execute a single component of the chain:"
+    echo "   $ sh runVisir.sh <YYYYMMDD_HH> <component>"
+    echo "where component is one of:"
+    echo "Campi / Tracce / Visualizzazioni / csv2shape.sh / copyN08.sh / runN08.sh"
+    echo
+    exit
+fi
+
+
+##########################################
+#
 # Paths and routes
 #
 ########################################## 
