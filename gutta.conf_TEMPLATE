@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# GUTTA path files
+export GUTTA_PATHS=/work/opa/$USER/VISIR-2/Utilita/DirPaths_DEV.yaml
+
 # Directory with the VISIR-2 model
 export BASE_PATH=/work/opa/$USER/VISIR-2/
 

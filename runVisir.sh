@@ -111,7 +111,7 @@ if [[ $COMP == "" ]] || [[ $COMP == "Campi" ]]; then
 
     # invoke the job
     cd $CAMPI_PATH
-    CAMPI_JOBID=$(bsub -ptl 720 -R "span[ptile=1]" -q s_medium -P 0338 -J VISIR2_Campi -o ${OP_PATH}/logs/out/campi_$(date +%Y%m%d-%H%M)_%J.log -e ${OP_PATH}/logs/err/campi_$(date +%Y%m%d-%H%M)_%J.err "python $CAMPI_EXE $RUNDATE")
+    CAMPI_JOBID=$(bsub -ptl 720 -R "span[ptile=1]" -q s_medium -P 0338 -J VISIR2_Campi -o ${OP_PATH}/logs/out/campi_$(date +%Y%m%d-%H%M)_%J.log -e ${OP_PATH}/logs/err/campi_$(date +%Y%m%d-%H%M)_%J.err "python $CAMPI_EXE $RUNDATE $GUTTA_PATHS")
     
 fi
 
@@ -131,12 +131,12 @@ if [[ $COMP == "" ]] || [[ $COMP == "Tracce" ]]; then
 	   
 	# Submit Tracce job array, without job dependency
 	# from Campi, since we only want Tracce. Then exit
-	TRACCE_JOBID=$(bsub -ptl 720 -q s_long -P 0338 -J "GUTTA_Tracce[1-30]" -o ${OP_PATH}/logs/out/tracce_$(date +%Y%m%d-%H%M)_%J.log -e ${OP_PATH}/logs/err/tracce_$(date +%Y%m%d-%H%M)_%J.err  "python $TRACCE_EXE $RUNDATE ${LSB_JOBINDEX}" &)
+	TRACCE_JOBID=$(bsub -ptl 720 -q s_long -P 0338 -J "GUTTA_Tracce[1-30]" -o ${OP_PATH}/logs/out/tracce_$(date +%Y%m%d-%H%M)_%J.log -e ${OP_PATH}/logs/err/tracce_$(date +%Y%m%d-%H%M)_%J.err  "python $TRACCE_EXE $RUNDATE $GUTTA_PATHS ${LSB_JOBINDEX}" &)
 	
     else
 
 	# Submit Tracce job array
-	TRACCE_JOBID=$(bsub -ptl 720 -q s_long -P 0338 -w "done(${CAMPI_JOBID})" -J "GUTTA_Tracce[1-30]" -o ${OP_PATH}/logs/out/tracce_$(date +%Y%m%d-%H%M)_%J.log -e ${OP_PATH}/logs/err/tracce_$(date +%Y%m%d-%H%M)_%J.err  "python $TRACCE_EXE $RUNDATE ${LSB_JOBINDEX}" &)
+	TRACCE_JOBID=$(bsub -ptl 720 -q s_long -P 0338 -w "done(${CAMPI_JOBID})" -J "GUTTA_Tracce[1-30]" -o ${OP_PATH}/logs/out/tracce_$(date +%Y%m%d-%H%M)_%J.log -e ${OP_PATH}/logs/err/tracce_$(date +%Y%m%d-%H%M)_%J.err  "python $TRACCE_EXE $RUNDATE $GUTTA_PATHS ${LSB_JOBINDEX}" &)
 
     fi    
     
@@ -158,12 +158,12 @@ if [[ $COMP == "" ]] || [[ $COMP == "Visualizzazioni" ]]; then
     
 	# Submit Visualizzazzioni job array without dependency
 	# from Tracce, since we only want Visualizzazioni
-	VISUAL_JOBID=$(bsub -ptl 720 -R "span[ptile=1]" -q s_long -P 0338 -J "GUTTA_Visual[1-30]" -o ${OP_PATH}/logs/out/visual_$(date +%Y%m%d-%H%M)_%J.log -e ${OP_PATH}/logs/err/visual_$(date +%Y%m%d-%H%M)_%J.err  "python $VISUAL_EXE ${LSB_JOBINDEX}" &)
+	VISUAL_JOBID=$(bsub -ptl 720 -R "span[ptile=1]" -q s_long -P 0338 -J "GUTTA_Visual[1-30]" -o ${OP_PATH}/logs/out/visual_$(date +%Y%m%d-%H%M)_%J.log -e ${OP_PATH}/logs/err/visual_$(date +%Y%m%d-%H%M)_%J.err  "python $VISUAL_EXE $GUTTA_PATHS ${LSB_JOBINDEX}" &)
 
     else
 
 	# Submit Visualizzazzioni job array
-      	VISUAL_JOBID=$(bsub -ptl 720 -R "span[ptile=1]" -q s_long -P 0338 -w "done(${TRACCE_JOBID})" -J "GUTTA_Visual[1-30]" -o ${OP_PATH}/logs/out/visual_$(date +%Y%m%d-%H%M)_%J.log -e ${OP_PATH}/logs/err/visual_$(date +%Y%m%d-%H%M)_%J.err  "python $VISUAL_EXE ${LSB_JOBINDEX}" &)
+      	VISUAL_JOBID=$(bsub -ptl 720 -R "span[ptile=1]" -q s_long -P 0338 -w "done(${TRACCE_JOBID})" -J "GUTTA_Visual[1-30]" -o ${OP_PATH}/logs/out/visual_$(date +%Y%m%d-%H%M)_%J.log -e ${OP_PATH}/logs/err/visual_$(date +%Y%m%d-%H%M)_%J.err  "python $VISUAL_EXE $GUTTA_PATHS ${LSB_JOBINDEX}" &)
 	
     fi
 fi
