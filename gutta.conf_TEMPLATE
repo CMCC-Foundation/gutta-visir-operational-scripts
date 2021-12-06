@@ -16,7 +16,9 @@ export SRCLINK=/data/opa/$USER/VISIR-2/_products/dynamic/
 export SRCAPPEND=AdriaticSea_nu04_inv012_T07/Visualizzazioni/
 
 # VISIR-2 destination base path on n08
-export N08BASE=dss@192.168.118.150:/data/GUTTA/dynamic
+export COPY=0
+export N08ADDR=dss@192.168.118.150
+export N08BASE=/data/GUTTA/dynamic
 
 # VISIR-2 destination final path on n08
 export N08APPEND=AdriaticSea_nu04_inv012_T07/

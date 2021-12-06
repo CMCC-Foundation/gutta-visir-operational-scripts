@@ -44,7 +44,7 @@ echo "Creating link..."
 ln -sf ${1} latestProduction -v
 
 # create the destination folder if it does not exist
-ssh dss@192.168.118.150 "mkdir -p /data/GUTTA/dynamic/${1}/AdriaticSea_nu04_inv012_T07/"
+ssh $N08ADDR "mkdir -p ${N08BASE}/${1}/AdriaticSea_nu04_inv012_T07/"
 
 # copy files
 scp -r ${SRC} ${DST}
