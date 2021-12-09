@@ -166,6 +166,7 @@ if [[ $COMP == "" ]] || [[ $COMP == "Visualizzazioni" ]]; then
       	VISUAL_JOBID=$(bsub -ptl 720 -R "span[ptile=1]" -q s_long -P 0338 -w "done(${TRACCE_JOBID})" -J "GUTTA_Visual[1-30]" -o ${OP_PATH}/logs/out/visual_$(date +%Y%m%d-%H%M)_%J.log -e ${OP_PATH}/logs/err/visual_$(date +%Y%m%d-%H%M)_%J.err  "python $VISUAL_EXE $GUTTA_PATHS ${LSB_JOBINDEX}" &)
 	
     fi
+    
 fi
     
 
@@ -202,33 +203,23 @@ fi
 #
 ##########################################
 
-if [[ $COPY -eq 0 ]]; then
-
-    # copy is not requested!
-    echo "===== copy is disabled! ====="
+if [[ $COMP == "" ]] || [[ $COMP == "copyN08.sh" ]]; then
     
-else
-
-    if [[ $COMP == "" ]] || [[ $COMP == "copyN08.sh" ]]; then
+    echo "===== copyN08 [requested on $(date)] ====="
+    cd $COPYN08_PATH/
+    
+    # Copy files to n08
+    if [[ $COMP == "copyN08.sh" ]]; then
 	
-	echo "===== copyN08 [requested on $(date)] ====="
-	cd $COPYN08_PATH/
+	# submit the job without job dependency since
+	# we only want to run copyN08.sh
+	COPYN08_JOBID=$(bsub -ptl 720 -R "span[ptile=1]" -q s_medium -P 0338 -o ${OP_PATH}/logs/out/copyToN08_$(date +%Y%m%d-%H%M)_%J.out -e ${OP_PATH}/logs/err/copyToN08_$(date +%Y%m%d-%H%M)_%J.err -J 'GUTTA_copyToN08' "sh ${COPYN08_EXE} ${RUNDATE}" &)	
 	
-	# Copy files to n08
-	if [[ $COMP == "copyN08.sh" ]]; then
-	    
-	    # submit the job without job dependency since
-	    # we only want to run copyN08.sh
-	    COPYN08_JOBID=$(bsub -ptl 720 -R "span[ptile=1]" -q s_medium -P 0338 -o ${OP_PATH}/logs/out/copyToN08_$(date +%Y%m%d-%H%M)_%J.out -e ${OP_PATH}/logs/err/copyToN08_$(date +%Y%m%d-%H%M)_%J.err -J 'GUTTA_copyToN08' "sh ${COPYN08_EXE} ${RUNDATE}" &)
-	    
-	    
-	else
-	    
-	    # invoke the job
-	    COPYN08_JOBID=$(bsub -ptl 720 -R "span[ptile=1]" -q s_medium -P 0338 -w "done($CSV_JOBID)" -o ${OP_PATH}/logs/out/copyToN08_$(date +%Y%m%d-%H%M)_%J.out -e ${OP_PATH}/logs/err/copyToN08_$(date +%Y%m%d-%H%M)_%J.err -J 'GUTTA_copyToN08' "sh ${COPYN08_EXE} ${RUNDATE}" &)
-	    
-	    
-	fi
+    else
+	
+	# invoke the job
+	COPYN08_JOBID=$(bsub -ptl 720 -R "span[ptile=1]" -q s_medium -P 0338 -w "done($CSV_JOBID)" -o ${OP_PATH}/logs/out/copyToN08_$(date +%Y%m%d-%H%M)_%J.out -e ${OP_PATH}/logs/err/copyToN08_$(date +%Y%m%d-%H%M)_%J.err -J 'GUTTA_copyToN08' "sh ${COPYN08_EXE} ${RUNDATE}" &)	
+	
     fi
 fi
 
@@ -249,12 +240,6 @@ if [[ $COMP == "" ]] || [[ $COMP == "runN08.sh" ]]; then
 	# sumbit the job without job dependency since
 	# we only want to run this script
 	N08_JOBID=$(bsub -ptl 720 -R "span[ptile=1]" -q s_medium -P 0338 -o ${OP_PATH}/logs/out/GUTTA_n08_$(date +%Y%m%d-%H%M)_%J.out -e ${OP_PATH}/logs/err/GUTTA_n08_$(date +%Y%m%d-%H%M)_%J.err -J 'GUTTA_n08' "sh ${RUNN08_EXE} ${RUNDATE}" &)
-
-    elif [[ $COPY -eq 0 ]]; then
-
-	# sumbit the job without job dependency since
-	# we only want to run this script
-	N08_JOBID=$(bsub -ptl 720 -R "span[ptile=1]" -q s_medium -P 0338 -w "done($CSV_JOBID)" -o ${OP_PATH}/logs/out/GUTTA_n08_$(date +%Y%m%d-%H%M)_%J.out -e ${OP_PATH}/logs/err/GUTTA_n08_$(date +%Y%m%d-%H%M)_%J.err -J 'GUTTA_n08' "sh ${RUNN08_EXE} ${RUNDATE}" &)
 
     else
 
