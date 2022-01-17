@@ -26,10 +26,11 @@ source ${OP_PATH}/utils.sh
 
 # set folder for copy
 SRC=$SRCLINK/${1}/$SRCAPPEND
+echo "SOURCE PATH: $SRC" 
 
 # set destination folder
 DST=$N08BASE/${1}/$N08APPEND
-
+echo "DESTINATION PATH: $DST"
 
 ##########################################
 #
@@ -38,12 +39,12 @@ DST=$N08BASE/${1}/$N08APPEND
 ##########################################
 
 # create a local link
-echo "Moving to $SRCLINK"
-cd ${SRCLINK}
-echo "I'm in ${SRCLINK}"
+echo "Moving to $DATAPRODUCTS"
+cd ${DATAPRODUCTS}
+echo "I'm in ${DATAPRODUCTS}"
 
 echo "Removing link..."
-rm ${SRCLINK}/latestProduction
+rm ${DATAPRODUCTS}/latestProduction
 
 echo "Creating link..."
 ln -sf ${1} latestProduction -v
