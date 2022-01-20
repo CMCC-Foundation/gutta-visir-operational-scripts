@@ -50,8 +50,8 @@ ROUTE=${ROUTES[$LSB_JOBINDEX]}
 
 
 # process csv files
- echo "find ${DATAPRODUCTS}/${RUNDATE}/AdriaticSea_nu04_inv012_T07/Visualizzazioni/${ROUTE} -iname \*csv -exec python csv2shape.py -i {} \;"
- find ${DATAPRODUCTS}/${RUNDATE}/${SRCAPPEND}/${ROUTE} -iname \*csv -exec python csv2shape.py -i {} \;
+ echo "find ${DATAPRODUCTS}/${RUNDATE}/AdriaticSea_nu04_inv012_T07/Visualizzazioni/${ROUTE} -iname \*csv -not -name Performance.csv -exec python csv2shape.py -i {} \;"
+ find ${DATAPRODUCTS}/${RUNDATE}/${SRCAPPEND}/${ROUTE} -iname \*csv -not -name Performance.csv -exec python csv2shape.py -i {} \;
 
 # deactivate environment
 conda deactivate
