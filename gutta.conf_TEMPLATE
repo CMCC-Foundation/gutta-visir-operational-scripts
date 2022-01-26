@@ -1,16 +1,21 @@
 #!/bin/bash
 
 # GUTTA path files
-export GUTTA_PATHS=/work/opa/$USER/VISIR-2/Utilita/DirPaths_DEV.yaml
+export GUTTA_PATHS=/work/opa/$USER/VISIR-2/Utilita/DirPaths_OP.yaml
 
 # Directory with the VISIR-2 model
 export BASE_PATH=/work/opa/$USER/VISIR-2/
 
 # Directory with VISIR-2 operational scripts
-export OP_PATH=/work/opa/$USER/operational_scripts/
+#export OP_PATH=/work/opa/$USER/operational_scripts/
+export OP_PATH=/work/opa/$USER/gutta-visir-operational-scripts/
+
+# VISIR-2 folder for link (DEV)
+export SRCLINK=/data/opa/$USER/VISIR-2/_products/dynamic/
 
 # VISIR-2 folder for link
-export SRCLINK=/data/opa/$USER/VISIR-2/_products/dynamic/
+export DATAPRODUCTS=/data/products/GUTTA-VISIR/VISIR-2/_products/dynamic/
+
 
 # VISIR-2 set folder to copy
 export SRCAPPEND=AdriaticSea_nu04_inv012_T07/Visualizzazioni/

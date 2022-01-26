@@ -4,6 +4,9 @@ import sys, getopt, os, shutil
 import csv
 import osgeo.ogr, osgeo.osr
 from osgeo import ogr
+import traceback
+
+import logging
 
 driver = osgeo.ogr.GetDriverByName('ESRI Shapefile')
 spatialReference = osgeo.osr.SpatialReference()
@@ -30,7 +33,6 @@ def write_shapefile(inputfile):
         layerL_defn = layerL.GetLayerDefn()
         # print("inputfile-->",inputfile)
 
-
         with open(inputfile, 'r') as csvfile:
             print("---------------------------")
             reader = csv.DictReader(csvfile, delimiter=',', skipinitialspace=True)
@@ -49,7 +51,7 @@ def write_shapefile(inputfile):
                 layerL.CreateField(new_field)
 
             featureL = osgeo.ogr.Feature(layerL_defn)
-                
+
             #  for each row (ADD POINTS to featureP layer)
             idx = -1
             for row in reader:
