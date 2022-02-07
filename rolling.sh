@@ -70,6 +70,8 @@ N08_ADDRESS=${N08ADDR}
 echo -e "Connect to ${N08_ADDRESS} via ssh and run rolling_mapfiles script"
 ssh ${N08_ADDRESS} "sh  ${N08_GUTTA_VISIR_BASE_PATH}/scripts/rolling_mapfiles.sh $TODAY >> ${N08_GUTTA_VISIR_BASE_PATH}/scripts/logs/rolling_$(date +"%Y%m%d").log  $TODAY"
 
+echo "Results of the rolling in N08 can be find in the file ${N08_GUTTA_VISIR_BASE_PATH}/scripts/logs. "
+
 ##############################################################
 #
 # DATA PRODUCTS on _dynamic
