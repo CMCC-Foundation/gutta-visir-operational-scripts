@@ -20,6 +20,7 @@ BASEPATH=${OP_PATH}
 LOGFOLDER=${BASEPATH}/logs
 OUT_LOGS_DIR=${LOGFOLDER}/out
 ERR_LOGS_DIR=${LOGFOLDER}/err
+CHECK_LOGS_DIR=${LOGFOLDER}/check
 DYNAMIC_DATA=${DATAPRODUCTS} #/data/products/GUTTA-VISIR/VISIR-2/_products/dynamic   
 N08_GUTTA_VISIR_BASE_PATH=/var/www/html/cache/_VISIR-GUTTA/
 
@@ -55,7 +56,7 @@ for D in $(seq ${DAYS_TO_PRESERVE} -1 0); do
     CAMIDDLE="${CAMIDDLE} -not -name '*${WDATE}*.*'"
 done
 
-LOGS_REM="find ${OUT_LOGS_DIR} ${ERR_LOGS_DIR}  ${CAMIDDLE}  -not -name .keep -not -name ${PRESERVE_FILE} -type f -exec rm  -v {} \; "
+LOGS_REM="find ${OUT_LOGS_DIR} ${ERR_LOGS_DIR} ${CHECK_LOGS_DIR} ${CAMIDDLE}  -not -name .keep -not -name ${PRESERVE_FILE} -type f -exec rm  -v {} \; "
 echo "Removing files..."
 eval $LOGS_REM
 
@@ -84,7 +85,7 @@ echo "Results of the rolling in N08 can be find in the file ${N08_GUTTA_VISIR_BA
 echo -e "\n\n=== Rolling on ${DYNAMIC_DATA} ==="
 
 echo "Find Campi and Visualizzazioni folder in  ${DYNAMIC_DATA} older than ${DAYS_TO_PRESERVE} days"
-DATA_DIR_REM="find ${DYNAMIC_DATA}  -maxdepth 3  -mindepth 3  -mtime +${DAYS_TO_PRESERVE} -not -name 'Tracce' -type d -exec rm -rf {} -v \;"
+DATA_DIR_REM="find ${DYNAMIC_DATA}  -maxdepth 3  -mindepth 3  -mtime +${DAYS_TO_PRESERVE} -not -name 'Tracce' -type d -exec rm -rf -v {} \;"
 echo "Removing data products directories..."
 eval $DATA_DIR_REM
 
