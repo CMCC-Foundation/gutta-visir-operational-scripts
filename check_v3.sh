@@ -11,6 +11,19 @@ source $HOME/gutta.conf
 LOG_PATH=$OP_PATH/logs/out
 ERR_PATH=$OP_PATH/logs/err
 
+
+# source profile
+source ~/.bash_profile
+
+# module load
+source ~/.bash_anaconda_3.7 
+
+# activate conda environment
+conda activate visir
+
+# set the python path
+export PYTHONPATH="$BASE_PATH"
+
 ##########################################
 #
 # Load utils
@@ -47,9 +60,12 @@ fi
 # check which is the last run
 for COMP in ${COMPONENTS[@]}; do
 
+    sleep 60
+    
     # check if the run is still in progress
-    JOBS=$(bjobs | wc -l)
-    if [[ $JOBS -ge 1 ]]; then
+    JOBS_RUNN=$(bjobs | wc -l)
+    echo "NR of jobs running : $JOBS_RUNN"
+    if [[ $JOBS_RUNN -ge 1 ]] ; then
         echo " -- Job still in progress"
         exit
     fi
@@ -63,7 +79,8 @@ for COMP in ${COMPONENTS[@]}; do
             echo " -- Found $ERRORS errors: MUST BE NOTIFIED!"
             echo $LASTRUN > ${LOG_PATH}/last_job_notified.log
             Notify 2 "Check" "${COMP} has ${ERRORS} error lines [run: $LASTRUN]"   
-	fi
+	    fi
+       
     fi
 
 done
