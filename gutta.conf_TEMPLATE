@@ -7,7 +7,6 @@ export GUTTA_PATHS=/work/opa/$USER/VISIR-2/Utilita/DirPaths_OP.yaml
 export BASE_PATH=/work/opa/$USER/VISIR-2/
 
 # Directory with VISIR-2 operational scripts
-#export OP_PATH=/work/opa/$USER/operational_scripts/
 export OP_PATH=/work/opa/$USER/gutta-visir-operational-scripts/
 
 # VISIR-2 folder for link (DEV)
@@ -27,3 +26,6 @@ export N08BASE=/data/GUTTA/dynamic
 
 # VISIR-2 destination final path on n08
 export N08APPEND=AdriaticSea_nu04_inv012_T07/
+
+
+# test from juno-dev
