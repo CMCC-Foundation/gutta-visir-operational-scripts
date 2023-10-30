@@ -6,7 +6,7 @@
 #############################
 
 # paths
-source $HOME/gutta.conf
+source $HOME/gutta_JUNO.conf
 
 # load utils
 source ${OP_PATH}/utils.sh
@@ -17,7 +17,7 @@ TODAY=$(date +"%Y%m%d")
 
 # path - PROD
 BASEPATH=${OP_PATH}
-LOGFOLDER=${BASEPATH}/logs
+LOGFOLDER=${OP_PATH_LOGS}/logs
 OUT_LOGS_DIR=${LOGFOLDER}/out
 ERR_LOGS_DIR=${LOGFOLDER}/err
 CHECK_LOGS_DIR=${LOGFOLDER}/check
@@ -56,7 +56,10 @@ for D in $(seq ${DAYS_TO_PRESERVE} -1 0); do
     CAMIDDLE="${CAMIDDLE} -not -name '*${WDATE}*.*'"
 done
 
-LOGS_REM="find ${OUT_LOGS_DIR} ${ERR_LOGS_DIR} ${CHECK_LOGS_DIR} ${CAMIDDLE}  -not -name .keep -not -name ${PRESERVE_FILE} -type f -exec rm  -v {} \; "
+#LOGS_REM="find ${OUT_LOGS_DIR} ${ERR_LOGS_DIR} ${CHECK_LOGS_DIR} ${CAMIDDLE}  -not -name .keep -not -name ${PRESERVE_FILE} -type f -exec rm  -v {} \; "
+LOGS_REM="find ${OUT_LOGS_DIR} ${ERR_LOGS_DIR} ${CHECK_LOGS_DIR} ${CAMIDDLE}  -not -name .keep -not -name ${PRESERVE_FILE} -type f -exec ls -v {} \; "
+
+
 echo "Removing files..."
 eval $LOGS_REM
 
@@ -69,7 +72,8 @@ echo -e "\n\n=== Rolling mapfiles and logs on N08 ==="
 N08_ADDRESS=${N08ADDR}
 
 echo -e "Connect to ${N08_ADDRESS} via ssh and run rolling_mapfiles script"
-ssh ${N08_ADDRESS} "sh  ${N08_GUTTA_VISIR_BASE_PATH}/scripts/rolling_mapfiles.sh $TODAY >> ${N08_GUTTA_VISIR_BASE_PATH}/scripts/logs/rolling_$(date +"%Y%m%d").log  $TODAY"
+# look if reachble from JUNO 
+#ssh ${N08_ADDRESS} "sh  ${N08_GUTTA_VISIR_BASE_PATH}/scripts/rolling_mapfiles.sh $TODAY >> ${N08_GUTTA_VISIR_BASE_PATH}/scripts/logs/rolling_$(date +"%Y%m%d").log  $TODAY"
 
 echo "Results of the rolling in N08 can be find in the file ${N08_GUTTA_VISIR_BASE_PATH}/scripts/logs. "
 
@@ -85,7 +89,10 @@ echo "Results of the rolling in N08 can be find in the file ${N08_GUTTA_VISIR_BA
 echo -e "\n\n=== Rolling on ${DYNAMIC_DATA} ==="
 
 echo "Find Campi and Visualizzazioni folder in  ${DYNAMIC_DATA} older than ${DAYS_TO_PRESERVE} days"
-DATA_DIR_REM="find ${DYNAMIC_DATA}  -maxdepth 3  -mindepth 3  -mtime +${DAYS_TO_PRESERVE} -not -name 'Tracce' -type d -exec rm -rf -v {} \;"
+#DATA_DIR_REM="find ${DYNAMIC_DATA}  -maxdepth 3  -mindepth 3  -mtime +${DAYS_TO_PRESERVE} -not -name 'Tracce' -type d -exec rm -rf -v {} \;"
+DATA_DIR_REM="find ${DYNAMIC_DATA}  -maxdepth 3  -mindepth 3  -mtime +${DAYS_TO_PRESERVE} -not -name 'Tracce' -type d -exec ls -v {} \;"
+
+
 echo "Removing data products directories..."
 eval $DATA_DIR_REM
 

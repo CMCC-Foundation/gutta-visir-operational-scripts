@@ -7,7 +7,7 @@
 ########################################## 
 
 # paths
-source $HOME/gutta.conf
+source $HOME/gutta_JUNO.conf
 
 
 ##########################################

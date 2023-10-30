@@ -7,9 +7,9 @@
 ########################################## 
 
 # paths
-source $HOME/gutta.conf
-LOG_PATH=$OP_PATH/logs/out
-ERR_PATH=$OP_PATH/logs/err
+source $HOME/gutta_JUNO.conf
+LOG_PATH=$OP_PATH_LOGS/logs/out
+ERR_PATH=$OP_PATH_LOGS/logs/err
 
 ##########################################
 #
