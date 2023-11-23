@@ -41,6 +41,8 @@ RUNN08_PATH=${OP_PATH}/
 RUNN08_EXE=${RUNN08_PATH}/runN08.sh
 
 LOGS=${OP_PATH_LOGS}
+echo "$LOGS"
+
 
 echo "_---------------------"
 echo $1
@@ -49,6 +51,7 @@ echo "_---------------------"
 
 # define the routes
 ROUTES=('ALDRZ_ITBDS' 'ALDRZ_ITBRI' 'GRGPA_ITBDS' 'GRIGO_ITBDS' 'HRDBV_ITAOI' 'HRDBV_ITBDS' 'HRDBV_ITBRI' 'HRRJK_ITAOI' 'HRSPU_ITAOI' 'HRSPU_ITBRI' 'HRZAD_ITAOI' 'HRZAD_ITBLT' 'HRZAD_ITRAN' 'ITAOI_HRDBV' 'ITAOI_HRRJK' 'ITAOI_HRSPU' 'ITAOI_HRZAD' 'ITBDS_ALDRZ' 'ITBDS_GRGPA' 'ITBDS_GRIGO' 'ITBDS_HRDBV' 'ITBDS_MEBAR' 'ITBLT_HRZAD' 'ITBRI_ALDRZ' 'ITBRI_HRDBV' 'ITBRI_HRSPU' 'ITBRI_MEBAR' 'ITRAN_HRZAD' 'MEBAR_ITBDS' 'MEBAR_ITBRI')
+
 
 
 ##########################################
@@ -86,7 +89,9 @@ source ~/.bash_profile
 source ~/.bash_anaconda_3.7 
 
 # activate conda environment
-conda activate visir
+conda activate visir-venv
+
+
 
 # set the python path
 export PYTHONPATH="$BASE_PATH"
@@ -113,7 +118,11 @@ if [[ $COMP == "" ]] || [[ $COMP == "Campi" ]]; then
 
     # invoke the job
     cd $CAMPI_PATH
-    CAMPI_JOBID=$(bsub -ptl 720 -R "span[ptile=1]" -q s_medium -P 0338 -J VISIR2_Campi -o ${LOGS}/logs/out/campi_$(date +%Y%m%d-%H%M)_%J.log -e ${LOGS}/logs/err/campi_$(date +%Y%m%d-%H%M)_%J.err "python $CAMPI_EXE $RUNDATE $GUTTA_PATHS")
+
+    CAMPI_JOBID=$(bsub -ptl 720 -R "rusage[mem=1G]" -q s_medium -P R000 -J Campi -o ${OP_PATH_LOGS}/out/campi_$(date +%Y%m%d-%H%M)_%J.log -e ${OP_PATH_LOGS}/err/campi_$(date +%Y%m%d-%H%M)_%J.err "python $CAMPI_EXE $RUNDATE $GUTTA_PATHS")	
+
+
+    #CAMPI_JOBID=$(bsub -ptl 720 -R "rusage[mem=1G]" -q s_medium -P R000 -J GUT_Campi -o ${LOGS}/logs/out/campi_$(date +%Y%m%d-%H%M)_%J.log -e ${LOGS}/logs/err/campi_$(date +%Y%m%d-%H%M)_%J.err "python $CAMPI_EXE $RUNDATE $GUTTA_PATHS")
     
 fi
 
@@ -135,12 +144,12 @@ if [[ $COMP == "" ]] || [[ $COMP == "Tracce" ]]; then
 	# from Campi, since we only want Tracce. Then exit
 	# Submit Tracce job array, without job dependency
 	# from Campi, since we only want Tracce. Then exit
-	TRACCE_JOBID=$(bsub -ptl 720 -q s_long -P 0338 -J "GUTTA_Tracce[1-30]" -o ${LOGS}/logs/out/tracce_$(date +%Y%m%d-%H%M)_%J.log -e ${LOGS}/logs/err/tracce_$(date +%Y%m%d-%H%M)_%J.err  "python $TRACCE_EXE $RUNDATE $GUTTA_PATHS ${LSB_JOBINDEX}" &)
+	TRACCE_JOBID=$(bsub -ptl 720   -R "rusage[mem=4G]"  -q s_long -P R000 -J "GUTTA_Tracce[1-30]" -o ${OP_PATH_LOGS}/out/tracce_$(date +%Y%m%d-%H%M)_%J.log -e ${OP_PATH_LOGS}/err/tracce_$(date +%Y%m%d-%H%M)_%J.err  "python $TRACCE_EXE $RUNDATE $GUTTA_PATHS ${LSB_JOBINDEX}" &)
 	
     else
 
 	# Submit Tracce job array
-	TRACCE_JOBID=$(bsub -ptl 720 -q s_long -P 0338 -w "done(${CAMPI_JOBID})" -J "GUTTA_Tracce[1-30]" -o ${LOGS}/logs/out/tracce_$(date +%Y%m%d-%H%M)_%J.log -e ${LOGS}/logs/err/tracce_$(date +%Y%m%d-%H%M)_%J.err  "python $TRACCE_EXE $RUNDATE $GUTTA_PATHS ${LSB_JOBINDEX}" &)
+	TRACCE_JOBID=$(bsub -ptl 720 -R "rusage[mem=4G]"   -q s_long -P R000 -w "done(${CAMPI_JOBID})" -J "GUTTA_Tracce[1-30]" -o ${OP_PATH_LOGS}/out/tracce_$(date +%Y%m%d-%H%M)_%J.log -e ${OP_PATH_LOGS}/err/tracce_$(date +%Y%m%d-%H%M)_%J.err  "python $TRACCE_EXE $RUNDATE $GUTTA_PATHS ${LSB_JOBINDEX}" &)
 
     fi    
     
@@ -162,12 +171,12 @@ if [[ $COMP == "" ]] || [[ $COMP == "Visualizzazioni" ]]; then
     
 	# Submit Visualizzazzioni job array without dependency
 	# from Tracce, since we only want Visualizzazioni
-	VISUAL_JOBID=$(bsub -ptl 720 -R "span[ptile=1]" -q s_long -P 0338 -J "GUTTA_Visual[1-30]" -o ${LOGS}/logs/out/visual_$(date +%Y%m%d-%H%M)_%J.log -e ${LOGS}/logs/err/visual_$(date +%Y%m%d-%H%M)_%J.err  "python $VISUAL_EXE $RUNDATE $GUTTA_PATHS ${LSB_JOBINDEX}" &)
+	VISUAL_JOBID=$(bsub -ptl 720 -R "rusage[mem=4G]"  -q s_long -P R000 -J "GUTTA_Visual[1-30]" -o ${OP_PATH_LOGS}/out/visual_$(date +%Y%m%d-%H%M)_%J.log -e ${OP_PATH_LOGS}/err/visual_$(date +%Y%m%d-%H%M)_%J.err  "python $VISUAL_EXE $RUNDATE $GUTTA_PATHS ${LSB_JOBINDEX}" &)
 
     else
 
 	# Submit Visualizzazzioni job array
-      	VISUAL_JOBID=$(bsub -ptl 720 -R "span[ptile=1]" -q s_long -P 0338 -w "done(${TRACCE_JOBID})" -J "GUTTA_Visual[1-30]" -o ${LOGS}/logs/out/visual_$(date +%Y%m%d-%H%M)_%J.log -e ${LOGS}/logs/err/visual_$(date +%Y%m%d-%H%M)_%J.err  "python $VISUAL_EXE $RUNDATE $GUTTA_PATHS ${LSB_JOBINDEX}" &)
+      	VISUAL_JOBID=$(bsub -ptl 720  -R "rusage[mem=4G]"    -q s_long -P R000 -w "done(${TRACCE_JOBID})" -J "GUTTA_Visual[1-30]" -o ${OP_PATH_LOGS}/out/visual_$(date +%Y%m%d-%H%M)_%J.log -e ${OP_PATH_LOGS}/err/visual_$(date +%Y%m%d-%H%M)_%J.err  "python $VISUAL_EXE $RUNDATE $GUTTA_PATHS ${LSB_JOBINDEX}" &)
 	
     fi
     
@@ -189,13 +198,13 @@ if [[ $COMP == "" ]] || [[ $COMP == "csv2shape.sh" ]]; then
     
 	# Submit csv2shape job array without job dependencies
 	# since we only want csv2shape 
-	CSV_JOBID=$(bsub -ptl 720 -R "span[ptile=1]" -q s_long -P 0338 -J 'GUTTA_csv2shape' -o ${LOGS}/logs/out/csv2shape_$(date +%Y%m%d-%H%M)_%J.log -e ${LOGS}/logs/err/csv2shape_$(date +%Y%m%d-%H%M)_%J.err "sh ${CSV2SHAPE_EXE} $RUNDATE" &)
+	CSV_JOBID=$(bsub -ptl 720 -R "rusage[mem=2G]"  -q s_long -P R000 -J 'GUTTA_csv2shape' -o ${OP_PATH_LOGS}/out/csv2shape_$(date +%Y%m%d-%H%M)_%J.log -e ${OP_PATH_LOGS}/err/csv2shape_$(date +%Y%m%d-%H%M)_%J.err "sh ${CSV2SHAPE_EXE} $RUNDATE" &)
 
 	
     else
 
 	# Submit csv2shape job array
-	CSV_JOBID=$(bsub -ptl 720 -R "span[ptile=1]" -q s_long -P 0338 -w "done($VISUAL_JOBID)" -J 'GUTTA_csv2shape' -o ${LOGS}/logs/out/csv2shape_$(date +%Y%m%d-%H%M)_%J.log -e ${LOGS}/logs/err/csv2shape_$(date +%Y%m%d-%H%M)_%J.err "sh ${CSV2SHAPE_EXE} $RUNDATE" &)
+	CSV_JOBID=$(bsub -ptl 720 -R "rusage[mem=2G]"  -q s_long -P R000 -w "done($VISUAL_JOBID)" -J 'GUTTA_csv2shape' -o ${OP_PATH_LOGS}/out/csv2shape_$(date +%Y%m%d-%H%M)_%J.log -e ${OP_PATH_LOGS}/err/csv2shape_$(date +%Y%m%d-%H%M)_%J.err "sh ${CSV2SHAPE_EXE} $RUNDATE" &)
 
     fi
 fi
@@ -207,46 +216,46 @@ fi
 #
 ##########################################
 
-if [[ $COMP == "" ]] || [[ $COMP == "copyN08.sh" ]]; then
+#if [[ $COMP == "" ]] || [[ $COMP == "copyN08.sh" ]]; then
     
-    echo "===== copyN08 [requested on $(date)] ====="
-    cd $COPYN08_PATH/
+#    echo "===== copyN08 [requested on $(date)] ====="
+#    cd $COPYN08_PATH/
     
-    # Copy files to n08
-    if [[ $COMP == "copyN08.sh" ]]; then
+#    # Copy files to n08
+#    if [[ $COMP == "copyN08.sh" ]]; then
+#	
+#	# submit the job without job dependency since
+#	# we only want to run copyN08.sh
+#	COPYN08_JOBID=$(bsub -ptl 720  -R "rusage[mem=1G]"   -q s_medium -P R000 -o ${OP_PATH_LOGS}/out/copyToN08_$(date +%Y%m%d-%H%M)_%J.out -e ${OP_PATH_LOGS}/err/copyToN08_$(date +%Y%m%d-%H%M)_%J.err -J 'GUTTA_copyToN08' "sh ${COPYN08_EXE} ${RUNDATE}" &)	
 	
-	# submit the job without job dependency since
-	# we only want to run copyN08.sh
-	COPYN08_JOBID=$(bsub -ptl 720 -R "span[ptile=1]" -q s_medium -P 0338 -o ${LOGS}/logs/out/copyToN08_$(date +%Y%m%d-%H%M)_%J.out -e ${LOGS}/logs/err/copyToN08_$(date +%Y%m%d-%H%M)_%J.err -J 'GUTTA_copyToN08' "sh ${COPYN08_EXE} ${RUNDATE}" &)	
+#    else
 	
-    else
+#	# invoke the job
+#	COPYN08_JOBID=$(bsub -ptl 720  -R "rusage[mem=1G]"  -q s_medium -P R000 -w "done($CSV_JOBID)" -o ${OP_PATH_LOGS}/out/copyToN08_$(date +%Y%m%d-%H%M)_%J.out -e ${OP_PATH_LOGS}/err/copyToN08_$(date +%Y%m%d-%H%M)_%J.err -J 'GUTTA_copyToN08' "sh ${COPYN08_EXE} ${RUNDATE}" &)	
 	
-	# invoke the job
-	COPYN08_JOBID=$(bsub -ptl 720 -R "span[ptile=1]" -q s_medium -P 0338 -w "done($CSV_JOBID)" -o ${LOGS}/logs/out/copyToN08_$(date +%Y%m%d-%H%M)_%J.out -e ${LOGS}/logs/err/copyToN08_$(date +%Y%m%d-%H%M)_%J.err -J 'GUTTA_copyToN08' "sh ${COPYN08_EXE} ${RUNDATE}" &)	
-	
-    fi
-fi
+#    fi
+#fi
 
 
 ##########################################
 #
 # Execute a command on N08
 #
-if [[ $COMP == "" ]] || [[ $COMP == "runN08.sh" ]]; then
+#if [[ $COMP == "" ]] || [[ $COMP == "runN08.sh" ]]; then
 
-    echo "===== runN08 [requested on $(date)] ====="
-    cd $RUNN08_PATH/
+#    echo "===== runN08 [requested on $(date)] ====="
+#    cd $RUNN08_PATH/
+#
+#    if [[ $COMP == "runN08.sh" ]]; then
+#
+#	# sumbit the job without job dependency since
+#	# we only want to run this script
+#	N08_JOBID=$(bsub -ptl 720  -R "rusage[mem=1G]"  -q s_medium -P R000 -o ${OP_PATH_LOGS}/out/GUTTA_n08_$(date +%Y%m%d-%H%M)_%J.out -e ${OP_PATH_LOGS}/err/GUTTA_n08_$(date +%Y%m%d-%H%M)_%J.err -J 'GUTTA_n08' "sh ${RUNN08_EXE} ${RUNDATE}" &)
 
-    if [[ $COMP == "runN08.sh" ]]; then
+#    else
 
-	# sumbit the job without job dependency since
-	# we only want to run this script
-	N08_JOBID=$(bsub -ptl 720 -R "span[ptile=1]" -q s_medium -P 0338 -o ${LOGS}/logs/out/GUTTA_n08_$(date +%Y%m%d-%H%M)_%J.out -e ${LOGS}/logs/err/GUTTA_n08_$(date +%Y%m%d-%H%M)_%J.err -J 'GUTTA_n08' "sh ${RUNN08_EXE} ${RUNDATE}" &)
-
-    else
-
-	# invoke the job
-	N08_JOBID=$(bsub -ptl 720 -R "span[ptile=1]" -q s_medium -P 0338 -w "done($COPYN08_JOBID)" -o ${LOGS}/logs/out/GUTTA_n08_$(date +%Y%m%d-%H%M)_%J.out -e ${LOGS}/logs/err/GUTTA_n08_$(date +%Y%m%d-%H%M)_%J.err -J 'GUTTA_n08' "sh ${RUNN08_EXE} ${RUNDATE}" &)
+#	# invoke the job
+#	N08_JOBID=$(bsub -ptl 720 -R "rusage[mem=1G]" -q s_medium -P R000 -w "done($COPYN08_JOBID)" -o ${OP_PATH_LOGS}/out/GUTTA_n08_$(date +%Y%m%d-%H%M)_%J.out -e ${OP_PATH_LOGS}/err/GUTTA_n08_$(date +%Y%m%d-%H%M)_%J.err -J 'GUTTA_n08' "sh ${RUNN08_EXE} ${RUNDATE}" &)
 	
-    fi
-fi
+#    fi
+#fi
