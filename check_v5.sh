@@ -8,7 +8,6 @@
 echo "Source ~/.bash_profile"
 source ~/.bash_profile
 
-
 # paths
 source $HOME/gutta.conf
 LOG_PATH=$OP_PATH/logs/out
@@ -31,6 +30,7 @@ echo "source ${OP_PATH}/utils.sh"
 source ${OP_PATH}/utils.sh
 
 
+echo "Little change"
 
 # Find the last run
 LASTRUN_LOGFILE=$(ls $LOG_PATH/runVisir*log -tr | tail -1)
