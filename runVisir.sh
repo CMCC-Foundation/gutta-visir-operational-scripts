@@ -18,7 +18,8 @@ if [[ $1 == "--help" ]]; then
     exit
 fi
 
-
+# if need help on crontab check
+# /var/spool/mail/<accountname>
 ##########################################
 #
 # Paths and routes
@@ -27,6 +28,8 @@ fi
 
 # paths
 source $HOME/gutta_JUNO.conf
+echo "source  $HOME/gutta_JUNO.conf"
+
 CAMPI_PATH=${BASE_PATH}/Campi
 CAMPI_EXE=${CAMPI_PATH}/MAIN_campi.py
 TRACCE_PATH=${BASE_PATH}/Tracce
@@ -100,7 +103,6 @@ export PYTHONPATH="$BASE_PATH"
 RUNDATE=$1
 COMP=$2
 
-
 ##########################################
 #
 # Campi
@@ -119,10 +121,10 @@ if [[ $COMP == "" ]] || [[ $COMP == "Campi" ]]; then
     # invoke the job
     cd $CAMPI_PATH
 
-    CAMPI_JOBID=$(bsub -ptl 720 -R "rusage[mem=1G]" -q s_medium -P R000 -J Campi -o ${OP_PATH_LOGS}/out/campi_$(date +%Y%m%d-%H%M)_%J.log -e ${OP_PATH_LOGS}/err/campi_$(date +%Y%m%d-%H%M)_%J.err "python $CAMPI_EXE $RUNDATE $GUTTA_PATHS")	
+    CAMPI_JOBID=$(bsub -ptl 720 -R "rusage[mem=1.2G]" -q s_medium -P R000 -J Campi -o ${OP_PATH_LOGS}/out/campi_$(date +%Y%m%d-%H%M)_%J.log -e ${OP_PATH_LOGS}/err/campi_$(date +%Y%m%d-%H%M)_%J.err "python $CAMPI_EXE $RUNDATE $GUTTA_PATHS")	
 
 
-    #CAMPI_JOBID=$(bsub -ptl 720 -R "rusage[mem=1G]" -q s_medium -P R000 -J GUT_Campi -o ${LOGS}/logs/out/campi_$(date +%Y%m%d-%H%M)_%J.log -e ${LOGS}/logs/err/campi_$(date +%Y%m%d-%H%M)_%J.err "python $CAMPI_EXE $RUNDATE $GUTTA_PATHS")
+    #CAMPI_JOBID=$(bsub -ptl 720 -R "rusage[mem=1.2G]" -q s_medium -P R000 -J GUT_Campi -o ${LOGS}/logs/out/campi_$(date +%Y%m%d-%H%M)_%J.log -e ${LOGS}/logs/err/campi_$(date +%Y%m%d-%H%M)_%J.err "python $CAMPI_EXE $RUNDATE $GUTTA_PATHS")
     
 fi
 
@@ -144,12 +146,12 @@ if [[ $COMP == "" ]] || [[ $COMP == "Tracce" ]]; then
 	# from Campi, since we only want Tracce. Then exit
 	# Submit Tracce job array, without job dependency
 	# from Campi, since we only want Tracce. Then exit
-	TRACCE_JOBID=$(bsub -ptl 720   -R "rusage[mem=4G]"  -q s_long -P R000 -J "GUTTA_Tracce[1-30]" -o ${OP_PATH_LOGS}/out/tracce_$(date +%Y%m%d-%H%M)_%J.log -e ${OP_PATH_LOGS}/err/tracce_$(date +%Y%m%d-%H%M)_%J.err  "python $TRACCE_EXE $RUNDATE $GUTTA_PATHS ${LSB_JOBINDEX}" &)
+	TRACCE_JOBID=$(bsub -ptl 720   -R "rusage[mem=3.3G]"  -q s_long -P R000 -J "GUTTA_Tracce[1-30]" -o ${OP_PATH_LOGS}/out/tracce_$(date +%Y%m%d-%H%M)_%J.log -e ${OP_PATH_LOGS}/err/tracce_$(date +%Y%m%d-%H%M)_%J.err  "python $TRACCE_EXE $RUNDATE $GUTTA_PATHS ${LSB_JOBINDEX}" &)
 	
     else
 
 	# Submit Tracce job array
-	TRACCE_JOBID=$(bsub -ptl 720 -R "rusage[mem=4G]"   -q s_long -P R000 -w "done(${CAMPI_JOBID})" -J "GUTTA_Tracce[1-30]" -o ${OP_PATH_LOGS}/out/tracce_$(date +%Y%m%d-%H%M)_%J.log -e ${OP_PATH_LOGS}/err/tracce_$(date +%Y%m%d-%H%M)_%J.err  "python $TRACCE_EXE $RUNDATE $GUTTA_PATHS ${LSB_JOBINDEX}" &)
+	TRACCE_JOBID=$(bsub -ptl 720 -R "rusage[mem=3.3G]"   -q s_long -P R000 -w "done(${CAMPI_JOBID})" -J "GUTTA_Tracce[1-30]" -o ${OP_PATH_LOGS}/out/tracce_$(date +%Y%m%d-%H%M)_%J.log -e ${OP_PATH_LOGS}/err/tracce_$(date +%Y%m%d-%H%M)_%J.err  "python $TRACCE_EXE $RUNDATE $GUTTA_PATHS ${LSB_JOBINDEX}" &)
 
     fi    
     
@@ -171,12 +173,12 @@ if [[ $COMP == "" ]] || [[ $COMP == "Visualizzazioni" ]]; then
     
 	# Submit Visualizzazzioni job array without dependency
 	# from Tracce, since we only want Visualizzazioni
-	VISUAL_JOBID=$(bsub -ptl 720 -R "rusage[mem=4G]"  -q s_long -P R000 -J "GUTTA_Visual[1-30]" -o ${OP_PATH_LOGS}/out/visual_$(date +%Y%m%d-%H%M)_%J.log -e ${OP_PATH_LOGS}/err/visual_$(date +%Y%m%d-%H%M)_%J.err  "python $VISUAL_EXE $RUNDATE $GUTTA_PATHS ${LSB_JOBINDEX}" &)
+	VISUAL_JOBID=$(bsub -ptl 720 -R "rusage[mem=3.6G]"  -q s_long -P R000 -J "GUTTA_Visual[1-30]" -o ${OP_PATH_LOGS}/out/visual_$(date +%Y%m%d-%H%M)_%J.log -e ${OP_PATH_LOGS}/err/visual_$(date +%Y%m%d-%H%M)_%J.err  "python $VISUAL_EXE $RUNDATE $GUTTA_PATHS ${LSB_JOBINDEX}" &)
 
     else
 
 	# Submit Visualizzazzioni job array
-      	VISUAL_JOBID=$(bsub -ptl 720  -R "rusage[mem=4G]"    -q s_long -P R000 -w "done(${TRACCE_JOBID})" -J "GUTTA_Visual[1-30]" -o ${OP_PATH_LOGS}/out/visual_$(date +%Y%m%d-%H%M)_%J.log -e ${OP_PATH_LOGS}/err/visual_$(date +%Y%m%d-%H%M)_%J.err  "python $VISUAL_EXE $RUNDATE $GUTTA_PATHS ${LSB_JOBINDEX}" &)
+      	VISUAL_JOBID=$(bsub -ptl 720  -R "rusage[mem=3.6G]"    -q s_long -P R000 -w "done(${TRACCE_JOBID})" -J "GUTTA_Visual[1-30]" -o ${OP_PATH_LOGS}/out/visual_$(date +%Y%m%d-%H%M)_%J.log -e ${OP_PATH_LOGS}/err/visual_$(date +%Y%m%d-%H%M)_%J.err  "python $VISUAL_EXE $RUNDATE $GUTTA_PATHS ${LSB_JOBINDEX}" &)
 	
     fi
     
@@ -198,13 +200,13 @@ if [[ $COMP == "" ]] || [[ $COMP == "csv2shape.sh" ]]; then
     
 	# Submit csv2shape job array without job dependencies
 	# since we only want csv2shape 
-	CSV_JOBID=$(bsub -ptl 720 -R "rusage[mem=2G]"  -q s_long -P R000 -J 'GUTTA_csv2shape' -o ${OP_PATH_LOGS}/out/csv2shape_$(date +%Y%m%d-%H%M)_%J.log -e ${OP_PATH_LOGS}/err/csv2shape_$(date +%Y%m%d-%H%M)_%J.err "sh ${CSV2SHAPE_EXE} $RUNDATE" &)
+	CSV_JOBID=$(bsub -ptl 720 -R "rusage[mem=0.05G]"  -q s_long -P R000 -J 'GUTTA_csv2shape' -o ${OP_PATH_LOGS}/out/csv2shape_$(date +%Y%m%d-%H%M)_%J.log -e ${OP_PATH_LOGS}/err/csv2shape_$(date +%Y%m%d-%H%M)_%J.err "sh ${CSV2SHAPE_EXE} $RUNDATE" &)
 
 	
     else
 
 	# Submit csv2shape job array
-	CSV_JOBID=$(bsub -ptl 720 -R "rusage[mem=2G]"  -q s_long -P R000 -w "done($VISUAL_JOBID)" -J 'GUTTA_csv2shape' -o ${OP_PATH_LOGS}/out/csv2shape_$(date +%Y%m%d-%H%M)_%J.log -e ${OP_PATH_LOGS}/err/csv2shape_$(date +%Y%m%d-%H%M)_%J.err "sh ${CSV2SHAPE_EXE} $RUNDATE" &)
+	CSV_JOBID=$(bsub -ptl 720 -R "rusage[mem=0.05G]"  -q s_long -P R000 -w "done($VISUAL_JOBID)" -J 'GUTTA_csv2shape' -o ${OP_PATH_LOGS}/out/csv2shape_$(date +%Y%m%d-%H%M)_%J.log -e ${OP_PATH_LOGS}/err/csv2shape_$(date +%Y%m%d-%H%M)_%J.err "sh ${CSV2SHAPE_EXE} $RUNDATE" &)
 
     fi
 fi

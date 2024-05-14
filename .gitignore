@@ -1,3 +1,4 @@
 *log
 *out
 *err
+logs/*/.keep

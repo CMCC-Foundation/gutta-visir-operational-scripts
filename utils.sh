@@ -3,7 +3,6 @@
 # read configuration file
 source $HOME/.telegramrc
 
-
 ####################################################
 #
 # Local conf

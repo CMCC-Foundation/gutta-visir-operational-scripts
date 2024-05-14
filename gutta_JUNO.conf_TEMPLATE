@@ -1,29 +1,30 @@
 #!/bin/bash
 
 # GUTTA path files
-#export GUTTA_PATHS=/work/opa/guttavisir-dev/visir-2/utilita/DirPaths_DEV.yaml
-export GUTTA_PATHS=/users_home/opa/guttavisir-dev/VISIR-2/Utilita/DirPaths_DEV.yaml
+export GUTTA_PATHS=/users_home/cmcc/guttavisir-dev/VISIR-2/Utilita/DirPaths_DEV.yaml
 
 # Directory with the VISIR-2 model
-export BASE_PATH=/users_home/opa/guttavisir-dev/VISIR-2/
+export BASE_PATH=/users_home/cmcc/guttavisir-dev/VISIR-2/
 
 # Directory with VISIR-2 operational scripts
-export OP_PATH=/users_home/opa/guttavisir-dev/gutta-visir-operational-scripts/
-export OP_PATH_LOGS=/work/opa/guttavisir-dev/gutta-visir-operational-scripts-logs/
+export OP_PATH=/users_home/cmcc/guttavisir-dev/gutta-visir-operational-scripts/
+export OP_PATH_LOGS=/work/cmcc/guttavisir-dev/gutta-visir-operational-scripts-logs/
 
 # VISIR-2 folder for link -still not created
-export SRCLINK=/data/opa/guttavisir-dev/_products/dynamic/
+export SRCLINK=/data/products/GUTTA-VISIR_DEV/_products/dynamic/
+
 
 # VISIR-2 set folder to copy
 export SRCAPPEND=AdriaticSea_nu04_inv012_T07/Visualizzazioni/
 
 # Directory with CSV - still not created
-export DATAPRODUCTS=/data/opa/guttavisir-dev/_products/dynamic/
+export DATAPRODUCTS=/data/products/GUTTA-VISIR_DEV/_products/dynamic/
 
-# VISIR-2 destination base path on n08  ???
-export COPY=0
-export N08ADDR=dss@192.168.118.150
-export N08BASE=/data/GUTTA/dynamic_dev  #???
+
+## VISIR-2 destination base path on n08  ???
+#export COPY=0
+#export N08ADDR=dss@192.168.118.150
+#export N08BASE=/data/GUTTA/dynamic_dev  #???
 
 # VISIR-2 destination final path on n08
 export N08APPEND=AdriaticSea_nu04_inv012_T07/
