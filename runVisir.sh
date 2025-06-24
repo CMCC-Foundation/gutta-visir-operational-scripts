@@ -218,46 +218,46 @@ fi
 #
 ##########################################
 
-#if [[ $COMP == "" ]] || [[ $COMP == "copyN08.sh" ]]; then
+if [[ $COMP == "" ]] || [[ $COMP == "copyN08.sh" ]]; then
     
-#    echo "===== copyN08 [requested on $(date)] ====="
-#    cd $COPYN08_PATH/
+   echo "===== copyN08 [requested on $(date)] ====="
+   cd $COPYN08_PATH/
     
-#    # Copy files to n08
-#    if [[ $COMP == "copyN08.sh" ]]; then
-#	
-#	# submit the job without job dependency since
-#	# we only want to run copyN08.sh
-#	COPYN08_JOBID=$(bsub -ptl 720  -R "rusage[mem=1G]"   -q s_medium -P R000 -o ${OP_PATH_LOGS}/out/copyToN08_$(date +%Y%m%d-%H%M)_%J.out -e ${OP_PATH_LOGS}/err/copyToN08_$(date +%Y%m%d-%H%M)_%J.err -J 'GUTTA_copyToN08' "sh ${COPYN08_EXE} ${RUNDATE}" &)	
+   # Copy files to n08
+   if [[ $COMP == "copyN08.sh" ]]; then
 	
-#    else
+	# submit the job without job dependency since
+	# we only want to run copyN08.sh
+	COPYN08_JOBID=$(bsub -ptl 720  -R "rusage[mem=1G]"   -q s_medium -P R000 -o ${OP_PATH_LOGS}/out/copyToN08_$(date +%Y%m%d-%H%M)_%J.out -e ${OP_PATH_LOGS}/err/copyToN08_$(date +%Y%m%d-%H%M)_%J.err -J 'GUTTA_copyToN08' "sh ${COPYN08_EXE} ${RUNDATE}" &)	
 	
-#	# invoke the job
-#	COPYN08_JOBID=$(bsub -ptl 720  -R "rusage[mem=1G]"  -q s_medium -P R000 -w "done($CSV_JOBID)" -o ${OP_PATH_LOGS}/out/copyToN08_$(date +%Y%m%d-%H%M)_%J.out -e ${OP_PATH_LOGS}/err/copyToN08_$(date +%Y%m%d-%H%M)_%J.err -J 'GUTTA_copyToN08' "sh ${COPYN08_EXE} ${RUNDATE}" &)	
+   else
 	
-#    fi
-#fi
+	# invoke the job
+	COPYN08_JOBID=$(bsub -ptl 720  -R "rusage[mem=1G]"  -q s_medium -P R000 -w "done($CSV_JOBID)" -o ${OP_PATH_LOGS}/out/copyToN08_$(date +%Y%m%d-%H%M)_%J.out -e ${OP_PATH_LOGS}/err/copyToN08_$(date +%Y%m%d-%H%M)_%J.err -J 'GUTTA_copyToN08' "sh ${COPYN08_EXE} ${RUNDATE}" &)	
+	
+   fi
+fi
 
 
 ##########################################
 #
 # Execute a command on N08
 #
-#if [[ $COMP == "" ]] || [[ $COMP == "runN08.sh" ]]; then
+# if [[ $COMP == "" ]] || [[ $COMP == "runN08.sh" ]]; then
 
 #    echo "===== runN08 [requested on $(date)] ====="
 #    cd $RUNN08_PATH/
-#
+
 #    if [[ $COMP == "runN08.sh" ]]; then
-#
-#	# sumbit the job without job dependency since
-#	# we only want to run this script
-#	N08_JOBID=$(bsub -ptl 720  -R "rusage[mem=1G]"  -q s_medium -P R000 -o ${OP_PATH_LOGS}/out/GUTTA_n08_$(date +%Y%m%d-%H%M)_%J.out -e ${OP_PATH_LOGS}/err/GUTTA_n08_$(date +%Y%m%d-%H%M)_%J.err -J 'GUTTA_n08' "sh ${RUNN08_EXE} ${RUNDATE}" &)
+
+# 	# sumbit the job without job dependency since
+# 	# we only want to run this script
+# 	N08_JOBID=$(bsub -ptl 720  -R "rusage[mem=1G]"  -q s_medium -P R000 -o ${OP_PATH_LOGS}/out/GUTTA_n08_$(date +%Y%m%d-%H%M)_%J.out -e ${OP_PATH_LOGS}/err/GUTTA_n08_$(date +%Y%m%d-%H%M)_%J.err -J 'GUTTA_n08' "sh ${RUNN08_EXE} ${RUNDATE}" &)
 
 #    else
 
-#	# invoke the job
-#	N08_JOBID=$(bsub -ptl 720 -R "rusage[mem=1G]" -q s_medium -P R000 -w "done($COPYN08_JOBID)" -o ${OP_PATH_LOGS}/out/GUTTA_n08_$(date +%Y%m%d-%H%M)_%J.out -e ${OP_PATH_LOGS}/err/GUTTA_n08_$(date +%Y%m%d-%H%M)_%J.err -J 'GUTTA_n08' "sh ${RUNN08_EXE} ${RUNDATE}" &)
+# 	# invoke the job
+# 	N08_JOBID=$(bsub -ptl 720 -R "rusage[mem=1G]" -q s_medium -P R000 -w "done($COPYN08_JOBID)" -o ${OP_PATH_LOGS}/out/GUTTA_n08_$(date +%Y%m%d-%H%M)_%J.out -e ${OP_PATH_LOGS}/err/GUTTA_n08_$(date +%Y%m%d-%H%M)_%J.err -J 'GUTTA_n08' "sh ${RUNN08_EXE} ${RUNDATE}" &)
 	
 #    fi
-#fi
+# fi

@@ -82,16 +82,16 @@ fi
 
 
 # check 
-# if [[ ! -z ${CHECK_LOGS_DIR} ]] ; then 
-#     # if the paths  exist and are all defined rolling logs 
-#     echo "CHECK_LOGS_DIR=${CHECK_LOGS_DIR} defined."
-#     LOGS_REM="find ${CHECK_LOGS_DIR}  -not -name .keep  -mtime +1 -type f -exec echo -v {} \; "  # rm -rf or echo -v
-#     echo "READING files..."
-#     eval $LOGS_REM
+if [[ ! -z ${CHECK_LOGS_DIR} ]] ; then 
+    # if the paths  exist and are all defined rolling logs 
+    echo "CHECK_LOGS_DIR=${CHECK_LOGS_DIR} defined."
+    LOGS_REM="find ${CHECK_LOGS_DIR}  -not -name .keep  -mtime +1 -type f -exec rm -rf  {} \; "  # rm -rf or echo -v
+    echo "READING files..."
+    eval $LOGS_REM
 
-# else 
-#     echo "CHECK_LOGS_DIR is not defined. Exiting... "
-# fi
+else 
+    echo "CHECK_LOGS_DIR is not defined. Exiting... "
+fi
 
 
 # and later remove 
